@@ -1,0 +1,59 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SideBarAvalonia.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="SideBarAvalonia.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="SideBarAvalonia">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <SplitView IsPaneOpen="{Binding IsOpenPanel}"
+               OpenPaneLength="300"
+                CompactPaneLength="48"
+               DisplayMode="CompactInline"
+               Background="#1e1e1e"
+               PaneBackground="#1e1e1e">
+        <SplitView.Pane>
+           <StackPanel Spacing="5" Margin="5">
+               <Button Command="{Binding TriggerPanelCommand}">
+                   <PathIcon Data="{StaticResource LineHorizontal3Regular}"></PathIcon>
+               </Button>
+               <!--- ListBox control is a common UI element used to display a list of items.-->
+               <!--- ItemsSource is bound to the Items property of the MainWindowViewModel. Items is the collection we are iteration on-->
+                <!--- SelectedItem is bound to the IsSelectedItem property of the MainWindowViewModel. IsSelectedItem is the current selected item in the list-->
+               <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedListItem}">
+                   <!--- ItemTemplate is used to determine how each item in the ListBox should be displayed. 
+                   We can think of it as an loop through the DataType-->
+                   <!--- The The DataTemplate specifies that the data type for each item is vm:ListItemTemplate.
+                    This is a reference to a ViewModel class in the SideBarAvalonia.ViewModels namespace.-->
+                   <ListBox.ItemTemplate>
+                       <DataTemplate DataType="{x:Type vm:ListItemTemplate}">
+                           <!--- StackPanel is a simple layout panel that arranges its child elements side by side oriented horizontally or vertically.-->
+                           <StackPanel Spacing="15" Orientation="Horizontal">
+                               <PathIcon Data="{Binding ListItemIcon}"></PathIcon>
+                               <!--- TextBlock is bound to the Label property of the ListItemTemplate ViewModel. 
+                               This means that the text displayed in the TextBlock will be the value of the Label property of the current item..-->
+                               <TextBlock Text="{Binding Label}"></TextBlock>
+                           </StackPanel>
+                       </DataTemplate>
+                   </ListBox.ItemTemplate>
+               </ListBox>
+           </StackPanel>
+        </SplitView.Pane>
+        <SplitView.Content>
+            <Border CornerRadius="12 0 0 0" Background="#2d2d2d">
+                <!--- TransitioningContentControl is a control that allows display dynamic content with a transition animation when the content changes..-->
+                <!--- It allows us to bind the content to the current viewmodel page. When the CurrentPage property changes, the TransitioningContentControl will update its content and display a transition animation. -->
+                <TransitioningContentControl Content="{Binding CurrentPage}">
+                </TransitioningContentControl>
+            </Border>
+        </SplitView.Content>
+    </SplitView>
+
+</Window>
